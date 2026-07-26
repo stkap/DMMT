@@ -37,7 +37,7 @@ The source code is perfectly tailored for a native Windows 11 environment. You c
 g++ -O3 src/main.cpp -o dmmt_profiler
 ./dmmt_profiler
 
-**📊 Memory Profiling Results**
+## 📊 Memory Profiling Results
 
 The included C++ stress test simulates 6,000 continuous learning cycles, integrating random white noise and systematic defects to trigger network growth.
 
