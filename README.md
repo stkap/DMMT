@@ -46,7 +46,6 @@ Phase 1: Without Branch Merging
 
 Memory grows linearly due to micro-fluctuations in the unmerged systematic defect.
 
-(Note: Rename your image to Screenshot_246.png and place it in the /images folder)
 Phase 2: With Apoptosis and Merging Enabled
 
 The engine crystallizes the defect into a single node. The new baseline remains perfectly flat, completely halting memory leakage.
