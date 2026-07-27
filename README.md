@@ -42,6 +42,7 @@ g++ -O3 src/main.cpp -o dmmt_profiler
 The included C++ stress test simulates 6,000 continuous learning cycles, integrating random white noise and systematic defects to trigger network growth.
 
 When the memory limit is reached, the Algorithm of Sleep (Topological Refactoring) is triggered. It utilizes Apoptosis (pruning noise) and Branch Merging (crystallizing systematic defects into a single node) to recover 99.9% of memory and halt memory leakage entirely.
+
 Phase 1: Without Branch Merging
 
 Memory grows linearly due to micro-fluctuations in the unmerged systematic defect.
