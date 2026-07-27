@@ -50,6 +50,7 @@ Memory grows linearly due to micro-fluctuations in the unmerged systematic defec
 Phase 2: With Apoptosis and Merging Enabled
 
 The engine crystallizes the defect into a single node. The new baseline remains perfectly flat, completely halting memory leakage.
+
 📄 Academic Paper
 
 For a deep dive into the mathematical foundation, the Hard Routing heuristic, and the L2​-normalized Traceback Learning, please refer to the full paper:
