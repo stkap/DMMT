@@ -53,7 +53,7 @@ The engine crystallizes the defect into a single node. The new baseline remains 
 📄 Academic Paper
 
 For a deep dive into the mathematical foundation, the Hard Routing heuristic, and the L2​-normalized Traceback Learning, please refer to the full paper:
-[Link to your arXiv PDF or IEEE publication will be placed here]
+[Link to arXiv PDF or IEEE publication will be placed here]
 ⚖️ License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
