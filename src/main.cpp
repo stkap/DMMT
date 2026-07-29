@@ -175,6 +175,35 @@ void addSystematicDefect(float* vec) {
     }
 }
 
+// Simulation of 3 different "pipes" (manifolds) with internal noise of ±20%
+void addTubularDefects(float* vec, std::mt19937& gen) {
+    std::uniform_int_distribution<int> tube_selector(1, 3);
+    std::uniform_real_distribution<float> noise_coeff(0.8f, 1.2f); // Deviation ±20%
+    
+    int tube = tube_selector(gen);
+    int start_idx = 0;
+    
+    // We distribute 3 defects across different parts of a 64-dimensional vector,
+    // so that they do not merge with each other, but form 3 independent clusters
+    if (tube == 1) start_idx = 0;       // Anomaly A: pixels 0-14
+    else if (tube == 2) start_idx = 20; // Anomaly B: pixels 20-34
+    else if (tube == 3) start_idx = 40; // Anomaly C: pixels 40-54
+
+    for(int k = 0; k < 15; ++k) {
+        // We multiply by a random coefficient FOR EACH element individually.
+        // This causes the vector to deviate in angle (the cosine similarity changes).
+        vec[start_idx + k] = 1.0f * noise_coeff(gen); 
+    }
+    
+    // Mandatory L2 normalization
+    float sum_sq = 0.0f;
+    for (size_t i = 0; i < VEC_SIZE; ++i) sum_sq += vec[i] * vec[i];
+    if (sum_sq > 0.0f) {
+        float norm = std::sqrt(sum_sq);
+        for (size_t i = 0; i < VEC_SIZE; ++i) vec[i] /= norm;
+    }
+}
+
 int main() {
     std::cout << "Starting Edge Continuous Learning Stress Test...\n";
     
@@ -212,10 +241,9 @@ int main() {
         std::copy(base_signal, base_signal + VEC_SIZE, signal);
         
         if (i % 5 == 0) {
-            // Every 5th iteration there is a SYSTEMIC defect
-            addSystematicDefect(signal);
+            // Every 5th iteration we shoot a noisy anomaly from one of the 3 pipes
+            addTubularDefects(signal, gen);
         } else {
-            // In other cases - random white noise (dust on the sensor)
             addNoiseAndNormalize(signal, gen);
         }
         
@@ -243,9 +271,8 @@ int main() {
         std::copy(base_signal, base_signal + VEC_SIZE, signal);
         
         if (i % 5 == 0) {
-            // The defect is still here
-            addSystematicDefect(signal); 
-        } 
+            addTubularDefects(signal, gen); 
+        }
         // There is no more white noise (simulating the normal operation of the learned system)
         
         root->processVector(signal);
@@ -260,3 +287,4 @@ int main() {
     std::cout << "Test complete. Results saved to 'memory_log.csv'.\n";
     return 0;
 }
+
