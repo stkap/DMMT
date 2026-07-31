@@ -235,7 +235,7 @@ int main() {
                  << root->countTotalNodes() * BYTES_PER_NODE << ",Morning_Clean\n";
     }
 
-    // PHASE 2: "Day" - Noise + 20% Systematic Defects (4000 cycles)
+// PHASE 2: "Day" - Noise + 20% Systematic Defects (4000 cycles) WITH MICRO-SLEEPS
     for (int i = 0; i < 4000; ++i, ++iteration) {
         float signal[VEC_SIZE];
         std::copy(base_signal, base_signal + VEC_SIZE, signal);
@@ -244,6 +244,7 @@ int main() {
             // Every 5th iteration we shoot a noisy anomaly from one of the 3 pipes
             addTubularDefects(signal, gen);
         } else {
+            // In other cases - random white noise
             addNoiseAndNormalize(signal, gen);
         }
         
@@ -253,17 +254,17 @@ int main() {
             csv_file << iteration << "," << root->countTotalNodes() << "," 
                      << root->countTotalNodes() * BYTES_PER_NODE << ",Day_Noisy\n";
         }
+
+        // --- NEW: MICRO-SLEEP EVERY 200 ITERATIONS ---
+        if ((i + 1) % 200 == 0) {
+            std::cout << "[NAP] Micro-sleep at iteration " << iteration << "...\n";
+            root->sleepRefactoringApoptosis(); // Killing random trash
+            root->sleepRefactoringMerge();     // We collapse classmates into standards
+        }
     }
 
     // PHASE 3: "Sleep" - Refactoring (1 cycle)
-    std::cout << "Node count BEFORE Sleep: " << root->countTotalNodes() << "\n";
-    root->sleepRefactoringApoptosis(); // It will clean up the noise, but will leave a system defect!
-    root->sleepRefactoringMerge();
-    std::cout << "Node count AFTER Sleep: " << root->countTotalNodes() << "\n";
-    
-    csv_file << iteration << "," << root->countTotalNodes() << "," 
-             << root->countTotalNodes() * BYTES_PER_NODE << ",Night_Sleep\n";
-    iteration++;
+    // PHASE 3 is not needed now(with micro-sleep) 
 
     // PHASE 4: "New Morning" - The conveyor has been cleared of dust, leaving only a systemic imbalance.
     for (int i = 0; i < 2000; ++i, ++iteration) {
