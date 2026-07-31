@@ -12,7 +12,7 @@ It entirely eliminates the need for the Backpropagation algorithm, resolving the
 * **No Backpropagation:** Uses Topological Backpropagation and Traceback Learning (Oja's Rule) on the active path.
 * **$O(1)$ Training Complexity:** Only the nodes on the active routing path are updated.
 * **Zero Catastrophic Forgetting:** Network topology grows dynamically to adapt to new patterns (anomalies or systematic defects) without overwriting learned weights.
-* **Deterministic Memory:** Strictly 256 bytes per node. Uses a linear Bump Allocator to completely eliminate heap fragmentation.
+* **Bounded Deterministic Memory (Micro-naps):** Memory footprint is strictly bounded to under 40 KB using periodic on-the-fly topological refactoring. Each node consumes exactly 256 bytes, utilizing a linear Bump Allocator to completely eliminate heap fragmentation.
 
 ## 📂 Repository Structure
 * `/src` - Core C++ source code containing the DMMT engine and node structures.
@@ -39,22 +39,25 @@ g++ -O3 src/main.cpp -o dmmt_profiler
 ```
 📊 Memory Profiling Results
 
-The included C++ stress test simulates 6,000 continuous learning cycles, integrating random white noise and systematic defects to trigger network growth.
-
-When the memory limit is reached, the Algorithm of Sleep (Topological Refactoring) is triggered. It utilizes Apoptosis (pruning noise) and Branch Merging (crystallizing systematic defects into a single node) to recover 99.9% of memory and halt memory leakage entirely.
+The included C++ stress test simulates nearly 7,000 continuous learning cycles, integrating random white noise and systematic defects to trigger network growth. We evaluate the memory management across three architectural stages:
 
 Phase 1: Without Branch Merging
+Memory grows linearly due to micro-fluctuations in the unmerged systematic defect, inevitably leading to an Out-Of-Memory (OOM) crash.
+(See fig1.png in /images)
 
-Memory grows linearly due to micro-fluctuations in the unmerged systematic defect.
+Phase 2: Batch Apoptosis and Merging
+The Algorithm of Sleep is triggered only at the end of the active learning phase. The engine successfully crystallizes the defect into a single node, halting permanent memory leakage. However, the system suffers from a massive transient memory spike (~800 KB) before the refactoring occurs.
+(See fig2.png in /images)
 
-Phase 2: With Apoptosis and Merging Enabled
-
-The engine crystallizes the defect into a single node. The new baseline remains perfectly flat, completely halting memory leakage.
+Phase 3: True Bounded Continuous Learning (Micro-naps)
+By triggering the refactoring algorithm periodically on the fly (every 200 iterations), the memory profile forms a deterministic sawtooth pattern. The topology instantly collapses to 4-5 core nodes after each micro-nap, capping peak memory consumption at strictly under 40 KB. This achieves a 95% reduction in RAM overhead, allowing endless continuous learning on the most constrained microcontrollers.
+(See fig3.png in /images)
 
 📄 Academic Paper
 
-For a deep dive into the mathematical foundation, the Hard Routing heuristic, and the L2​-normalized Traceback Learning, please refer to the full paper:
+For a deep dive into the mathematical foundation, the Hard Routing heuristic, spherical clustering, and the $L_2$-normalized Traceback Learning, please refer to the full paper:
 [Link to arXiv PDF or IEEE publication will be placed here]
+
 ⚖️ License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
